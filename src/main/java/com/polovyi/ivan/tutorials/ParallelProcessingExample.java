@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 public class ParallelProcessingExample {
@@ -23,14 +22,8 @@ public class ParallelProcessingExample {
         log.info("====> {} available processors. <====", availableProcessors);
 
         FakeDataBase fakeDataBase = new FakeDataBase();
-        Stream<CustomerEntity> customerEntities = fakeDataBase.generateCustomerList().stream();
-
-        if (availableProcessors > 2) {
-            log.info("====> More than 2 processors available. Using parallel processing. <====");
-            customerEntities.parallel();
-        }
-
-        customerEntities
+        fakeDataBase.generateCustomerList().stream()
+                .parallel()
                 .map(c -> createReportDTO(c))
                 .collect(Collectors.toSet());
 
